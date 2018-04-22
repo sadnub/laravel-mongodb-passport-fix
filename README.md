@@ -1,6 +1,4 @@
 # laravel-mongodb-passport-fix
-Updates passport models to use the MongoDB Models
-
 This will add a console command to automatically update the `Illuminate\Database\Eloquent\Model` models in the Passport vendor files to include `Jenssegers\Mongodb\Eloquent\Model` instead.
 
 # Installation
