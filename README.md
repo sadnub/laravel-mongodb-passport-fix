@@ -11,4 +11,4 @@ Just run `php artisan fix:passport` and that is all
 
 This will need to be run everytime Laravel Passport is updated
 
-You can revert these changes by running `php artisan fix:passport -rollback`
+You can revert these changes by running `php artisan fix:passport --rollback`
