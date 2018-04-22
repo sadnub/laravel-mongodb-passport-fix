@@ -11,7 +11,8 @@ class MongoDBPassportFix extends Command
      *
      * @var string
      */
-    protected $signature = 'fix:passport';
+    protected $signature = 'fix:passport
+                            {--rollback : Rollback the Passport fix}';
 
     /**
      * The console command description.
@@ -23,23 +24,23 @@ class MongoDBPassportFix extends Command
     /**
      * MongoDB Model to use
      *
-     * @return void
+     * @var string
      */
     protected $mongo_model = 'Jenssegers\Mongodb\Eloquent\Model';
 
     /**
      * Laravel Eloquent Model to Replace with
      *
-     * @return void
+     * @var string
      */
     protected $laravel_model = 'Illuminate\Database\Eloquent\Model';
 
     /**
+     * Passport vendor files location
      *
-     *
-     *
+     * @var string
      */
-    protected $passport_path = 'vendor/laravel/passport/src/'; 
+    protected $passport_path = 'vendor/laravel/passport/src/';
 
     /**
      * Create a new command instance.
@@ -59,8 +60,15 @@ class MongoDBPassportFix extends Command
     public function handle()
     {
         //
-	$this->fixFiles();
-	return "Passport Files have been fixed for MongoDB";
+        if (!$this->option('rollback'))
+        {
+          	$this->fixFiles();
+          	$this->info("Passport Files have been fixed for MongoDB");
+        } else {
+          
+            $this->rollbackFiles();
+            $this->info("Passport Files have been rolled back for MongoDB");
+        }
     }
     
     /**
@@ -71,12 +79,24 @@ class MongoDBPassportFix extends Command
     protected function fixFiles()
     {
 
-	foreach (glob(base_path($this->passport_path) . '*.php') as $filename)
-	{
+    	foreach (glob(base_path($this->passport_path) . '*.php') as $filename)
+    	{
     	    $file = file_get_contents($filename);
     	    file_put_contents($filename, str_replace($this->laravel_model, $this->mongo_model, $file));
-	    print_r($filename . " has been Checked/Modified\n");
-	}
+    	    //$this->info($filename . " has been Checked/Modified");
+    	}
+
+    }
+    
+    protected function rollbackFiles()
+    {
+
+    	foreach (glob(base_path($this->passport_path) . '*.php') as $filename)
+    	{
+    	    $file = file_get_contents($filename);
+    	    file_put_contents($filename, str_replace($this->mongo_model, $this->laravel_model, $file));
+    	    //$this->info($filename . " has been Checked/Modified");
+    	}
 
     }
 }
